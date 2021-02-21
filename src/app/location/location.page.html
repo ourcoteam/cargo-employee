@@ -1,0 +1,29 @@
+<ion-header class="bg-header">
+    <ion-toolbar *ngIf="authService.isAuthenticated()">
+        <ion-button color="light" fill="clear" routerLink="/tabs/profile" routerDirection="forward" slot="end">
+            <ion-icon name="wallet" slot="end"></ion-icon>
+            <ion-badge slot="start">{{authService.userWallet?.wallet > 0 ? authService.userWallet?.wallet : 0}}</ion-badge>
+        </ion-button>
+        <ion-title>
+            <ion-img src="/assets/img/home_logo_small.svg" class="header-logo"></ion-img>
+        </ion-title>
+        <ion-button color="light" fill="clear" routerLink="/tabs/notifications" routerDirection="forward" slot="start">
+            <ion-icon name="notifications" slot="start"></ion-icon>
+            <ion-badge slot="end">{{authService.notificationsCount?.unreaded > 0 ? authService.notificationsCount?.unreaded : 0}}</ion-badge>
+        </ion-button>
+    </ion-toolbar>
+    <h6 class="emp-name ion-text-center">
+        {{_translate.instant('tabs.location')}}
+    </h6>
+</ion-header>
+
+<ion-content class="io-padding">
+    <div id="map_canvas" #map_canvas>
+        <ion-img src="/assets/img/marker_delivery.svg" [ngClass]="mapDragging ? 'map-marker dragging' : 'map-marker'" id="DummyMarker"></ion-img>
+    </div>
+</ion-content>
+<ion-footer class="has-action">
+    <ion-button class="btn-full btn-gradient" expand="block" round strong [disabled]="!lat || !lng" (click)="updateLocation()">
+        {{ _translate.instant('general.update_my_location') }}
+    </ion-button>
+</ion-footer>

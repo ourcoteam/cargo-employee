@@ -1,0 +1,56 @@
+{
+  "prepare_queue": {
+    "installed": [],
+    "uninstalled": []
+  },
+  "config_munge": {
+    "files": {}
+  },
+  "installed_plugins": {
+    "cordova-plugin-whitelist": {
+      "PACKAGE_NAME": "com.cargopro.employee"
+    },
+    "cordova-plugin-statusbar": {
+      "PACKAGE_NAME": "com.cargopro.employee"
+    },
+    "cordova-plugin-device": {
+      "PACKAGE_NAME": "com.cargopro.employee"
+    },
+    "cordova-plugin-ionic-webview": {
+      "PACKAGE_NAME": "com.cargopro.employee"
+    },
+    "cordova-plugin-ionic-keyboard": {
+      "PACKAGE_NAME": "com.cargopro.employee"
+    },
+    "phonegap-plugin-barcodescanner": {
+      "PACKAGE_NAME": "com.cargopro.employee"
+    },
+    "cordova-plugin-nativeaudio": {
+      "PACKAGE_NAME": "com.cargopro.employee"
+    },
+    "cordova-plugin-geolocation": {
+      "GPS_REQUIRED": "true",
+      "PACKAGE_NAME": "com.cargopro.employee"
+    },
+    "cordova-plugin-camera": {
+      "PACKAGE_NAME": "com.cargopro.employee"
+    },
+    "cordova-sqlite-storage": {
+      "PACKAGE_NAME": "com.cargopro.employee"
+    },
+    "cordova-plugin-androidx": {
+      "PACKAGE_NAME": "com.cargopro.employee"
+    },
+    "cordova-plugin-androidx-adapter": {
+      "PACKAGE_NAME": "com.cargopro.employee"
+    },
+    "cordova-plugin-advanced-http": {
+      "PACKAGE_NAME": "com.cargopro.employee"
+    }
+  },
+  "dependent_plugins": {
+    "cordova-plugin-file": {
+      "PACKAGE_NAME": "com.cargopro.employee"
+    }
+  }
+}

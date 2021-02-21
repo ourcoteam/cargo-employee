@@ -1,0 +1,61 @@
+<ion-header class="bg-header">
+    <ion-toolbar>
+        <ion-button color="light" fill="clear" routerLink="/tabs/profile" routerDirection="forward" slot="end">
+            <ion-icon name="wallet" slot="end"></ion-icon>
+            <ion-badge *ngIf="authService.userWallet?.wallet" slot="start">{{ authService.userWallet?.wallet }}
+            </ion-badge>
+        </ion-button>
+        <ion-title>
+            <ion-img src="/assets/img/home_logo_small.svg" class="header-logo"></ion-img>
+        </ion-title>
+        <ion-button (click)="closeModal()" fill="clear" slot="start" color="light">
+            <ion-icon name="close" slot="icon-only"></ion-icon>
+        </ion-button>
+    </ion-toolbar>
+    <h6 class="emp-name ion-text-center">
+        {{ 'general.shipment_number' | translate }}
+    </h6>
+    <h4 class="shipment-number ion-text-center">
+        {{ shData?.number }}
+    </h4>
+</ion-header>
+
+
+<ion-content>
+    <ion-item>
+        <ion-label position="floating" color="medium">
+            {{'general.status' | translate}}
+        </ion-label>
+        <ion-select  interface="action-sheet" (ionChange)="statusChanged($event.detail.value)">
+            <ion-select-option value="update_status" *ngIf="shData?.modifications && shData?.update">
+                {{'actions.update_status' | translate}}
+            </ion-select-option>
+        
+            <ion-select-option value="postpone" *ngIf="shData?.modifications && shData?.postpone">
+                {{'actions.postpone' | translate}}
+            </ion-select-option>
+
+            <ion-select-option value="delivered" *ngIf="shData?.modifications && shData?.delivered">
+                {{'actions.delivered' | translate}}
+            </ion-select-option>
+
+            <ion-select-option value="receive" *ngIf="shData?.modifications && shData?.receive">
+                {{'actions.receive' | translate}}
+            </ion-select-option>
+
+            <ion-select-option value="addnote" *ngIf="shData?.modifications && shData?.addnote">
+                {{'actions.notes' | translate}}
+            </ion-select-option>
+
+            <ion-select-option value="discards" *ngIf="shData?.modifications && shData?.discards">
+                {{'actions.discards' | translate}}
+            </ion-select-option>
+
+        </ion-select>
+    </ion-item>
+    <br>
+
+    <ion-button [disabled]="!action" expand="block" (click)="submitAction()">{{'actions.apply' | translate }}</ion-button>
+    <br>
+    <ion-button expand="block" color="medium" (click)="openDetails()">{{'general.shipment_details' | translate}}</ion-button>
+</ion-content> 

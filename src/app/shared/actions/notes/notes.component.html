@@ -1,0 +1,30 @@
+<ion-header>
+    <ion-toolbar mode="ios">
+        <ion-button (click)="closeModal()" fill="clear" slot="start" color="dark">
+            <ion-icon name="close" slot="icon-only"></ion-icon>
+        </ion-button>
+        <ion-title> {{ _translate.instant('actions.notes') }} </ion-title>
+    </ion-toolbar>
+    <h4 class="shipment-number ion-text-center dark">
+        {{ shipData?.number }}
+    </h4>
+</ion-header>
+<ion-content class="ion-padding">
+    <div class="form-holder">
+        <form [formGroup]="noteForm">
+            <ion-item>
+                <ion-label position="floating" color="medium">
+                    {{ _translate.instant('actions.the_note') }}
+                    <ion-text> * </ion-text>
+                </ion-label>
+                <ion-textarea formControlName="note" [placeholder]="_translate.instant('actions.type_note')">
+                </ion-textarea>
+            </ion-item>
+        </form>
+    </div>
+</ion-content>
+<ion-footer class="has-action">
+    <ion-button class="btn-full btn-gradient" expand="block" *ngIf="action == 'addnote'" round strong (click)="addNote()" [disabled]="noteForm.invalid">
+        {{ _translate.instant('actions.addnote') }}
+    </ion-button>
+</ion-footer>

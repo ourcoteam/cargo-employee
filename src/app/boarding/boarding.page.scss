@@ -1,0 +1,41 @@
+.slide-content {
+  padding-top: 65px;
+  padding-bottom: 40px;
+  background-repeat: no-repeat;
+  background-position: right top;
+  background-size: cover;
+  &.slide_1 {
+    background-image: url(/assets/img/boarding/slide_bg_1.svg);
+  }
+  &.slide_2 {
+    background-image: url(/assets/img/boarding/slide_bg_2.svg);
+  }
+  &.slide_3 {
+    background-image: url(/assets/img/boarding/slide_bg_3.svg);
+  }
+  ion-img {
+    height: 395px;
+    max-height: 40vh;
+  }
+  h4 {
+    color: var(--ion-color-primary);
+    font-size: 22px;
+    font-weight: 800;
+    text-transform: uppercase;
+  }
+  .slide-text {
+    padding: 0 20px;
+    ion-text {
+      font-size: 14px;
+      font-weight: 400;
+    }
+  }
+}
+
+.swiper-pagination {
+  bottom: 0px;
+}
+
+.actions-holder {
+  padding: 3vh 10vw;
+}

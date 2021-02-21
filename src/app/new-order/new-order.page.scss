@@ -1,0 +1,167 @@
+// ion-slides {
+//     overflow-y: scroll;
+//     height: 100%;
+// }
+ion-segment.order-steps {
+    background: var(--ion-color-tertiary);
+    ion-segment-button {
+        color: rgba(255, 255, 255, 0.3);
+        --border-width: 0;
+        --indicator-color: transparent !important;
+        --indicator-color-checked: transparent !important;
+        ion-icon {
+            background: transparent;
+            border-radius: 100%;
+            font-size: 25px;
+            padding: 8px;
+        }
+        ion-label {
+            font-size: 10px;
+            margin-top: 5px;
+        }
+        .segment-button-indicator {
+            display: none !important;
+        }
+        &.segment-button-checked {
+            opacity: 1 !important;
+            --opacity: 1 !important;
+            ion-icon {
+                background: #fff;
+                color: var(--ion-color-tertiary);
+                --indicator-color-checked: transparent;
+            }
+            &:after {
+                opacity: 1;
+                border-top: 1px solid var(--ion-color-primary);
+            }
+        }
+        &:before {
+            content: '';
+            width: 50%;
+            position: relative;
+            height: 0;
+            left: 70%;
+            border-top: 1px #fff dashed;
+            top: 35%;
+            display: block;
+            z-index: 1;
+            opacity: 0.15;
+        }
+        &:after {
+            content: '';
+            width: 50%;
+            position: relative;
+            height: 0;
+            left: -20%;
+            border-top: 1px #fff dashed;
+            top: -64%;
+            display: block;
+            z-index: 1;
+            opacity: 0.15;
+        }
+        &:first-child {
+            &:after {
+                display: none;
+            }
+        }
+        &:last-child {
+            &:before {
+                display: none;
+            }
+        }
+        &.success {
+            color: var(--ion-color-primary);
+            opacity: 1 !important;
+            visibility: visible !important;
+            ion-icon {
+                background: var(--ion-color-primary);
+                color: var(--ion-color-tertiary);
+                margin-bottom: 0;
+            }
+            &:before,
+            &:after {
+                opacity: 1;
+                border-top: 1px solid var(--ion-color-primary);
+            }
+        }
+    }
+}
+
+.has-grids {
+    flex-direction: column;
+    .data-grid {
+        text-align: start;
+        font-size: 14px;
+        font-weight: 400;
+        margin-bottom: 10px;
+        width: 100%;
+        h4 {
+            color: var(--ion-color-primary);
+        }
+        ion-label {
+            text-transform: uppercase;
+        }
+        p {
+            span.dimmed {
+                color: var(--ion-color-medium);
+            }
+        }
+        &.package {
+            background: #ffffff;
+            border: 1px solid #f1a221;
+            border-radius: 0 5px 5px 0;
+            font-size: 11px !important;
+            box-shadow: 0 0px 3px #fbe2b9;
+            margin: 10px 3px;
+            border-left-width: 5px;
+            ion-col.actions {
+                display: flex;
+                flex-direction: column;
+                ion-button {
+                    margin: 0;
+                    display: flex;
+                    --box-shadow: none;
+                    --border-radius: 0;
+                    flex-direction: column;
+                    flex: 1;
+                }
+            }
+        }
+        &.package-review {
+            border: 1px solid #d3d3d3;
+            border-radius: 5px;
+            span.title {
+                color: var(--ion-color-medium);
+            }
+        }
+    }
+}
+
+.order-success {
+    ion-icon {
+        font-size: 130px;
+    }
+    p {
+        font-size: 14px;
+        font-weight: 400;
+        &.shipment-number {
+            font-weight: 900;
+            font-size: 18px;
+        }
+    }
+}
+
+html[lang='ar'] {
+    ion-segment.order-steps {
+        ion-segment-button {
+            &:before {
+                left: auto;
+                right: 70%;
+            }
+            &:after {
+                left: auto;
+                right: -20%;
+            }
+        }
+    }
+}

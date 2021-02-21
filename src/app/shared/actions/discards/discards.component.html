@@ -1,0 +1,48 @@
+<ion-header>
+    <ion-toolbar mode="ios">
+        <ion-button (click)="closeModal()" fill="clear" slot="start" color="dark">
+            <ion-icon name="close" slot="icon-only"></ion-icon>
+        </ion-button>
+        <ion-title> {{ _translate.instant('actions.discards') }} </ion-title>
+    </ion-toolbar>
+    <h4 class="shipment-number ion-text-center dark">
+        {{ shipData?.number }}
+    </h4>
+</ion-header>
+<ion-content class="ion-padding">
+    <div class="form-holder">
+        <form [formGroup]="discardsForm">
+            <ion-item>
+                <ion-label position="floating" color="medium">
+                    {{ _translate.instant('actions.reason') }}
+                    <ion-text> * </ion-text>
+                </ion-label>
+                <ion-select [placeholder]="_translate.instant('actions.select_reason')" interface="action-sheet" formControlName="message">
+                    <ion-select-option value="1">{{ _translate.instant('actions.receiver_request') }}
+                    </ion-select-option>
+                    <ion-select-option value="2">{{ _translate.instant('actions.receiver_evade') }}
+                    </ion-select-option>
+                    <ion-select-option value="3">{{ _translate.instant('actions.sender_request') }}
+                    </ion-select-option>
+                </ion-select>
+            </ion-item>
+            <ion-item>
+                <ion-label position="floating" color="medium">
+                    {{ _translate.instant('actions.responsible') }}
+                    <ion-text> * </ion-text>
+                </ion-label>
+                <ion-select [placeholder]="_translate.instant('actions.select_reason')" interface="action-sheet" formControlName="return_package_fee">
+                    <ion-select-option value="1">{{ _translate.instant('general.receiver') }}
+                    </ion-select-option>
+                    <ion-select-option value="2">{{ _translate.instant('general.sender') }}
+                    </ion-select-option>
+                </ion-select>
+            </ion-item>
+        </form>
+    </div>
+</ion-content>
+<ion-footer class="has-action">
+    <ion-button class="btn-full btn-gradient" expand="block" *ngIf="action == 'discards'" round strong (click)="doDiscard()" [disabled]="discardsForm.invalid">
+        {{ _translate.instant('actions.confirm') }}
+    </ion-button>
+</ion-footer>

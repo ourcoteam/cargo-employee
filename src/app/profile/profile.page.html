@@ -1,0 +1,56 @@
+<ion-header class="bg-header">
+    <ion-toolbar *ngIf="authService.isAuthenticated()">
+        <ion-button color="light" fill="clear" routerLink="/tabs/profile" routerDirection="forward" slot="end">
+            <ion-icon name="wallet" slot="end"></ion-icon>
+            <ion-badge slot="start">{{authService.userWallet?.wallet > 0 ? authService.userWallet?.wallet : 0}}</ion-badge>
+        </ion-button>
+        <ion-title>
+            <ion-img src="/assets/img/home_logo_small.svg" class="header-logo"></ion-img>
+        </ion-title>
+        <ion-button color="light" fill="clear" routerLink="/tabs/notifications" routerDirection="forward" slot="start">
+            <ion-icon name="notifications" slot="start"></ion-icon>
+            <ion-badge slot="end">{{authService.notificationsCount?.unreaded > 0 ? authService.notificationsCount?.unreaded : 0}}</ion-badge>
+        </ion-button>
+    </ion-toolbar>
+    <h6 class="emp-name ion-text-center">
+        {{_translate.instant('general.profile')}}
+    </h6>
+</ion-header>
+
+<ion-content>
+    <div class="profile-data">
+        <ion-avatar>
+            <img [src]="authService.userData?.avatar != null ? authService.userData?.avatar : '/assets/img/profile_image.svg'" />
+        </ion-avatar>
+        <ion-chip class="name" color="primary">
+            <ion-icon name="contact"></ion-icon>
+            <ion-label>{{authService.userData?.name}} {{authService.userData?.surname}}
+            </ion-label>
+        </ion-chip>
+        <ion-chip class="email" color="medium" outline="true">
+            <ion-icon name="mail"></ion-icon>
+            <ion-label>{{authService.userData?.email}}</ion-label>
+        </ion-chip>
+        <ion-chip class="phone" color="medium" outline="true">
+            <ion-icon name="phone-portrait"></ion-icon>
+            <ion-label>{{authService.userData?.mobile}}</ion-label>
+        </ion-chip>
+        <ion-chip class="wallet" color="medium" outline="true">
+            <ion-icon name="wallet"></ion-icon>
+            <ion-label>{{authService.userWallet?.wallet > 0 ? authService.userWallet?.wallet : 0}}</ion-label>
+        </ion-chip>
+    </div>
+    <ion-list lines="full">
+        <ion-item>
+            <ion-label> {{_translate.instant('general.language')}} </ion-label>
+            <ion-select [(ngModel)]="userLang" (ionChange)="changeLang()" interface="action-sheet">
+                <ion-select-option value="en">English</ion-select-option>
+                <ion-select-option value="ar">العربية</ion-select-option>
+            </ion-select>
+        </ion-item>
+        <ion-item (click)="authService.logout()">
+            <ion-icon name="log-out" slot="end"></ion-icon>
+            <ion-label> {{_translate.instant('general.logout')}} </ion-label>
+        </ion-item>
+    </ion-list>
+</ion-content>

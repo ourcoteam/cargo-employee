@@ -1,0 +1,24 @@
+<ion-tabs>
+    <ion-tab-bar slot="bottom" class="custom-tabs">
+        <ion-tab-button tab="home">
+            <ion-icon src="/assets/icons/home.svg"></ion-icon>
+            <ion-label>{{_translate.instant('tabs.home')}}</ion-label>
+        </ion-tab-button>
+
+        <ion-tab-button tab="notifications">
+            <ion-icon src="/assets/icons/notifications.svg"></ion-icon>
+            <ion-label>{{_translate.instant('tabs.notifications')}}</ion-label>
+            <ion-badge *ngIf="authService.notificationsCount?.unreaded > 0">{{authService.notificationsCount?.unreaded}}</ion-badge>
+        </ion-tab-button>
+
+        <ion-tab-button tab="profile">
+            <ion-icon src="/assets/icons/profile.svg"></ion-icon>
+            <ion-label>{{_translate.instant('tabs.profile')}}</ion-label>
+        </ion-tab-button>
+        <ion-tab-button tab="location">
+            <ion-icon src="/assets/icons/location.svg"></ion-icon>
+            <ion-label>{{_translate.instant('tabs.location')}}</ion-label>
+        </ion-tab-button>
+        
+    </ion-tab-bar>
+</ion-tabs>

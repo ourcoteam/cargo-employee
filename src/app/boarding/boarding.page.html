@@ -1,0 +1,39 @@
+<ion-content>
+    <ion-slides pager="true">
+        <ion-slide>
+            <div class="slide-content slide_1">
+                <ion-img src="/assets/img/boarding/slide_1.svg"></ion-img>
+                <h4>{{_translate.instant('general.submit_your_order')}}</h4>
+                <div class="slide-text">
+                    <ion-text color="medium" class="ion-text-wrap">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam.</ion-text>
+                </div>
+            </div>
+        </ion-slide>
+        <ion-slide>
+            <div class="slide-content slide_2">
+                <ion-img src="/assets/img/boarding/slide_2.svg"></ion-img>
+                <h4>{{_translate.instant('general.choose_a_destination')}}</h4>
+                <div class="slide-text">
+                    <ion-text color="medium" class="ion-text-wrap">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam.</ion-text>
+                </div>
+            </div>
+        </ion-slide>
+        <ion-slide>
+            <div class="slide-content slide_3">
+                <ion-img src="/assets/img/boarding/slide_3.svg"></ion-img>
+                <h4>{{_translate.instant('general.order_delivered')}}</h4>
+                <div class="slide-text">
+                    <ion-text color="medium" class="ion-text-wrap">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam.</ion-text>
+                </div>
+            </div>
+        </ion-slide>
+    </ion-slides>
+    <div class="actions-holder">
+        <ion-button color="primary" class="btn-full mr-b-30" expand="block" round strong routerLink="/register" routerDirection="root">
+            {{_translate.instant('general.register')}}
+        </ion-button>
+        <ion-button color="clight" class="btn-full slim low" expand="block" fill="outline" round strong routerLink="/login" routerDirection="root">
+            {{_translate.instant('general.skip')}}
+        </ion-button>
+    </div>
+</ion-content>

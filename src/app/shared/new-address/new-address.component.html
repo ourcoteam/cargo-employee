@@ -1,0 +1,81 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-title>
+            {{ _translate.instant('new_address.add_new_address') }}
+        </ion-title>
+        <ion-button (click)="closeModal()" fill="clear" slot="end">
+            <ion-icon name="close" slot="icon-only"></ion-icon>
+        </ion-button>
+    </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding">
+    <div class="white">
+        <div class="form-holder register-form">
+            <form [formGroup]="addressInfoForm">
+                <ion-item>
+                    <ion-label position="floating" color="medium">
+                        {{ _translate.instant('general.address_name') }}
+                        <ion-text> * </ion-text>
+                    </ion-label>
+                    <ion-input formControlName="address_name" type="text"> </ion-input>
+                </ion-item>
+                <ion-item>
+                    <ion-label position="floating" color="medium">
+                        {{ _translate.instant('general.country') }}
+                        <ion-text> * </ion-text>
+                    </ion-label>
+                    <ion-select formControlName="country_id" placeholder="Select Country" interface="action-sheet" (ionChange)="getRegions()" [disabled]="!countries">
+                        <ion-select-option *ngFor="let country of countries" [value]="country.id">{{ country.name }}</ion-select-option>
+                    </ion-select>
+                </ion-item>
+                <ion-item>
+                    <ion-label position="floating" color="medium">
+                        {{ _translate.instant('general.state_region') }}
+                        <ion-text> * </ion-text>
+                    </ion-label>
+                    <ion-select formControlName="state_id" placeholder="Select State/Region" interface="action-sheet" (ionChange)="getCities()" [disabled]="!regions">
+                        <ion-select-option *ngFor="let region of regions" [value]="region.id">{{ region.name }}</ion-select-option>
+                    </ion-select>
+                </ion-item>
+                <ion-item>
+                    <ion-label position="floating" color="medium">
+                        {{ _translate.instant('general.city') }}
+                        <ion-text> * </ion-text>
+                    </ion-label>
+                    <ion-select formControlName="city_id" placeholder="Select City" interface="action-sheet" (ionChange)="getAreas()" [disabled]="!cities">
+                        <ion-select-option *ngFor="let city of cities" [value]="city.id">{{ city.name }}
+                        </ion-select-option>
+                    </ion-select>
+                </ion-item>
+                <ion-item>
+                    <ion-label position="floating" color="medium">
+                        {{ _translate.instant('general.area') }}
+                    </ion-label>
+                    <ion-select formControlName="area_id" placeholder="Select Area" interface="action-sheet" [disabled]="!areas">
+                        <ion-select-option *ngFor="let area of areas" [value]="area.id">{{ area.name }}
+                        </ion-select-option>
+                    </ion-select>
+                </ion-item>
+                <ion-item>
+                    <ion-label position="floating" color="medium">
+                        {{ _translate.instant('general.postal_code') }}
+                    </ion-label>
+                    <ion-input formControlName="postal_code" type="num"> </ion-input>
+                </ion-item>
+            </form>
+        </div>
+        <div id="map_canvas" #map_canvas>
+            <ion-button color="dark" (click)="getCurrentLocation()" class="map-btn">
+                <ion-icon name="locate" slot="start"></ion-icon>
+                {{ _translate.instant('general.my_current_location') }}
+            </ion-button>
+            <!-- <ion-button ion-button (click)="onButtonClick()">Demo</ion-button> -->
+            <ion-img src="/assets/img/marker.svg" [ngClass]="mapDragging ? 'map-marker dragging' : 'map-marker'" id="DummyMarker"></ion-img>
+        </div>
+    </div>
+</ion-content>
+<ion-footer class="has-action">
+    <ion-button class="btn-full btn-gradient" expand="block" round strong [disabled]="!addressInfoForm.valid || !(lat && lng)" (click)="addNewAddress()">
+        {{ _translate.instant('new_address.add_new_address') }}
+    </ion-button>
+</ion-footer>

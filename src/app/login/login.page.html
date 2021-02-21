@@ -1,0 +1,31 @@
+<!-- <ion-header>
+  <ion-toolbar>
+    <ion-title>login</ion-title>
+  </ion-toolbar>
+</ion-header> -->
+
+<ion-content class="ion-padding image-bottom">
+    <div class="page-logo">
+        <ion-img src="/assets/img/logo.svg" class="logo"></ion-img>
+    </div>
+    <div class="form-holder login-form">
+        <form [formGroup]="loginForm">
+            <ion-item>
+                <ion-label position="floating" color="medium">{{_translate.instant('login.username')}}</ion-label>
+                <ion-input formControlName="username" type="text"> </ion-input>
+            </ion-item>
+            <ion-item>
+                <ion-label position="floating" color="medium">{{_translate.instant('login.password')}}</ion-label>
+                <ion-input formControlName="password" type="password"> </ion-input>
+            </ion-item>
+        </form>
+
+        <ion-button color="primary" class="btn-full mr-b-30" expand="block" round strong (click)="userLogin()">
+            {{_translate.instant('general.login')}}
+        </ion-button>
+    </div>
+    <div class="other-links ion-text-center ion-padding-top ion-padding-bottom">
+        <!-- <ion-text color="primary" routerLink="/forget" routerDirection="forward">
+            {{_translate.instant('login.forgot_password')}}</ion-text> -->
+    </div>
+</ion-content>

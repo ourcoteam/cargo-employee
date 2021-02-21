@@ -1,0 +1,484 @@
+<ion-header class="bg-header" [ngStyle]="{'opacity': Opacity}">
+    <ion-toolbar>
+        <ion-back-button defaultHref="/tabs/home" text="" icon="arrow-back" slot="start"></ion-back-button>
+        <ion-title>{{_translate.instant('general.new_order')}}</ion-title>
+    </ion-toolbar>
+    <ion-segment class="order-steps" color="light">
+        <ion-segment-button value="info" [checked]="step == 1" disabled="true" [class]="step > 1 ? 'success' : ''">
+            <ion-icon src="/assets/icons/package.svg"></ion-icon>
+            <ion-label>{{_translate.instant('general.shipment_info')}}</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="details" [checked]="step == 2" disabled="true" [class]="step > 2 ? 'success' : ''">
+            <ion-icon src="/assets/icons/checklist.svg"></ion-icon>
+            <ion-label>{{_translate.instant('general.shipment_details')}}</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="review" [checked]="step == 3" disabled="true" [class]="step > 3 ? 'success' : ''">
+            <ion-icon src="/assets/icons/box.svg"></ion-icon>
+            <ion-label>{{_translate.instant('general.order_review')}}</ion-label>
+        </ion-segment-button>
+    </ion-segment>
+</ion-header>
+
+<ion-content class="ion-padding" [ngStyle]="{'opacity': Opacity}" #content>
+    <ion-slides pager="false" #stepSlider class="step-slider" [options]="slideOpts">
+        <ion-slide>
+            <div class="form-holder">
+                <form [formGroup]="shipmentFirst">
+                    <ion-list>
+                        <ion-radio-group class="check-buttons" formControlName="shipment_type" (ionChange)="typeChange()" value="1">
+                            <ion-list-header>
+                                {{_translate.instant('general.shipment_type')}}
+                            </ion-list-header>
+
+                            <ion-item lines="none">
+                                <ion-label>{{_translate.instant('general.send')}}</ion-label>
+                                <ion-radio value="1" mode="ios" slot="start" label="_translate.instant('general.send')"></ion-radio>
+                            </ion-item>
+
+                            <ion-item lines="none">
+                                <ion-label>{{_translate.instant('general.receive')}}</ion-label>
+                                <ion-radio value="2" mode="ios" slot="start" label="Recieve"></ion-radio>
+                            </ion-item>
+                        </ion-radio-group>
+                    </ion-list>
+                    <ion-item class="has-action">
+                        <ion-note slot="end" color="primary" class="action-btn" (click)="newAddressModal()">{{_translate.instant('general.add_new_address')}}</ion-note>
+                        <ion-label position="stacked" color="medium">{{_translate.instant('general.sender_address')}} <span>*</span>
+                        </ion-label>
+                        <ion-select [placeholder]="_translate.instant('general.select_receiver')" interface="action-sheet" formControlName="sender_address">
+                            <ion-select-option *ngFor="let address of userAddresses" [value]="address.id">{{address.name}}</ion-select-option>
+                        </ion-select>
+                    </ion-item>
+                    <ion-item class="has-action">
+                        <ion-note slot="end" color="primary" class="action-btn" (click)="newReceiverModal()">{{_translate.instant('general.add_new_receiver')}}</ion-note>
+                        <ion-label position="stacked" color="medium">{{_translate.instant('general.receiver')}}
+                            <span *ngIf="shipmentFirst.get('shipment_type').value == 2 || shipmentFirst.get('receiver_id').value">*</span
+              >
+            </ion-label>
+            <ionic-selectable
+              #rcv
+              formControlName="receiver_id"
+              itemValueField="id"
+              itemTextField="name"
+              [items]="receivers"
+              [canSearch]="true"
+              [canClear]="true"
+              (onSearch)="searchUsers($event)"
+              [placeholder]="_translate.instant('general.select_receiver')"
+              [searchDebounce]="500"
+              [searchFailText]="_translate.instant('general.no_users_found')"
+              [searchPlaceholder]="_translate.instant('general.username_or_mobile')"
+              [shouldFocusSearchbar]="true"
+              headerColor="primary"
+              (onSelect)="rcvDoneSelect($event)"
+              [required]="shipmentFirst.get('shipment_type').value == 2"
+              (onClear)="clearRcvAddr($event)"
+            >
+            </ionic-selectable>
+          </ion-item>
+          <ion-item class="has-action">
+            <ion-note
+              slot="end"
+              color="primary"
+              class="action-btn"
+              (click)="newReceiverAddressModal()"
+              *ngIf="shipmentFirst.get('receiver_id').value"
+              >{{_translate.instant('general.add_receiver_address')}}</ion-note
+            >
+            <ion-label position="stacked" color="medium"
+              >{{_translate.instant('general.receiver_address')}}
+              <span
+                *ngIf="shipmentFirst.get('shipment_type').value == 2 || shipmentFirst.get('receiver_id').value"
+                >*</span
+              ></ion-label
+            >
+            <ion-select
+              [placeholder]="_translate.instant('general.select_receiver_address')"
+              interface="action-sheet"
+              formControlName="receiver_address"
+              [required]="shipmentFirst.get('receiver_id').value"
+            >
+              <ion-select-option
+                *ngFor="let recAddr of receiverAddresses"
+                [value]="recAddr?.id"
+                >{{recAddr?.name}}</ion-select-option
+              >
+            </ion-select>
+          </ion-item>
+          <ion-item>
+            <ion-label color="medium"
+              >{{_translate.instant('general.return_defray')}}</ion-label
+            >
+            <ion-toggle
+              color="primary"
+              formControlName="return_defray"
+              (ionChange)="defrayChange($event)"
+            ></ion-toggle>
+          </ion-item>
+          <ion-grid class="ion-no-padding" *ngIf="isReturnDefray">
+            <ion-row>
+              <ion-col size="6">
+                <ion-item>
+                  <ion-label color="medium" position="floating"
+                    >{{_translate.instant('general.return_package_fee')}}
+                    <span>*</span>
+                        </ion-label>
+                        <ion-input type="num" formControlName="package_fee" [required]="isReturnDefray">
+                        </ion-input>
+                    </ion-item>
+                    </ion-col>
+                    <ion-col size="6">
+                        <ion-item>
+                            <ion-label color="medium" position="floating">{{_translate.instant('general.package_fee')}}
+                                <span>*</span>
+                            </ion-label>
+                            <ion-input type="num" formControlName="return_package_fee" [required]="isReturnDefray">
+                            </ion-input>
+                        </ion-item>
+                    </ion-col>
+                    </ion-row>
+                    </ion-grid>
+
+                    <ion-item class="has-action">
+                        <ion-label position="stacked" color="medium">{{_translate.instant('general.payment_type')}}
+                            <span>*</span></ion-label>
+                        <ion-select [placeholder]="_translate.instant('general.select_payment_type')" interface="action-sheet" value="1" formControlName="payment_type" required>
+                            <ion-select-option value="1" selected>{{_translate.instant('general.postpaid')}}</ion-select-option>
+                            <ion-select-option value="2">{{_translate.instant('general.prepaid')}}</ion-select-option>
+                        </ion-select>
+                    </ion-item>
+                    <ion-item class="has-action">
+                        <ion-label position="stacked" color="medium">{{_translate.instant('general.package_type')}} <span>*</span>
+                        </ion-label>
+                        <ion-select [placeholder]="_translate.instant('general.select_package_type')" interface="action-sheet" formControlName="packaging_id">
+                            <ion-select-option *ngFor="let type of packageTypes" [value]="type?.id">{{type?.name}}</ion-select-option>
+                        </ion-select>
+                    </ion-item>
+                    <ion-item class="has-action">
+                        <ion-label position="stacked" color="medium">{{_translate.instant('general.office')}}
+                            <span>*</span></ion-label>
+                        <ion-select [placeholder]="_translate.instant('general.select_office')" interface="action-sheet" formControlName="office_id">
+                            <ion-select-option *ngFor="let office of offices" [value]="office?.id">{{office?.name}}</ion-select-option>
+                        </ion-select>
+                    </ion-item>
+                    <ion-item>
+                        <ion-label color="medium" position="floating">{{_translate.instant('general.ship_date')}}
+                        </ion-label>
+                        <ion-input type="num" formControlName="ship_date" [liIonic4Datepicker]="datePickerObj">
+                        </ion-input>
+                    </ion-item>
+                </form>
+            </div>
+        </ion-slide>
+        <ion-slide #slide2>
+            <div class="form-holder">
+                <div class="packages-holder has-grids" *ngFor="let package of packages; let i = index">
+                    <ion-grid class="data-grid package ion-no-padding">
+                        <ion-row>
+                            <ion-col size="10">
+                                <ion-row>
+                                    <ion-col>{{_translate.instant('general.package_type')}} {{package.category_id}}
+                                    </ion-col>
+                                    <ion-col>{{_translate.instant('general.quantity')}} {{package.quantity}}
+                                    </ion-col>
+                                    <ion-col></ion-col>
+                                </ion-row>
+                                <ion-row>
+                                    <ion-col>{{_translate.instant('general.weight')}}<br /> {{package.weight}} {{package.weight_unit}}</ion-col>
+                                    <ion-col>{{_translate.instant('general.height')}}<br /> {{package.height}} {{package.height_unit}}</ion-col>
+                                    <ion-col>{{_translate.instant('general.width')}}<br /> {{package.width}} {{package.width_unit}}</ion-col>
+                                    <ion-col>{{_translate.instant('general.length')}}<br /> {{package.length}} {{package.length_unit}}</ion-col>
+                                </ion-row>
+                                <ion-row>
+                                    <ion-col>{{_translate.instant('general.description')}} {{package.description}}
+                                    </ion-col>
+                                </ion-row>
+                            </ion-col>
+                            <ion-col size="2" class="actions ion-no-padding">
+                                <ion-button expand="full" color="danger" size="small" fill="clear" (click)="removePackage(i)">
+                                    <ion-icon name="trash" slot="icon-only"></ion-icon>
+                                </ion-button>
+                            </ion-col>
+                        </ion-row>
+                    </ion-grid>
+                </div>
+                <form [formGroup]="packageForm">
+                    <ion-grid class="ion-no-padding">
+                        <ion-row>
+                            <ion-col size="6" class="no-padding-left">
+                                <ion-item>
+                                    <ion-label position="stacked" color="medium">{{_translate.instant('general.category')}}</ion-label>
+                                    <ion-select [placeholder]="_translate.instant('general.select_category')" interface="action-sheet" formControlName="category_id">
+                                        <ion-select-option *ngFor="let category of categories" [value]="category.id">{{category.name}}</ion-select-option>
+                                    </ion-select>
+                                </ion-item>
+                            </ion-col>
+                            <ion-col size="6" class="no-padding-left">
+                                <ion-item>
+                                    <ion-label position="floating" color="medium">{{_translate.instant('general.quantity')}}</ion-label>
+                                    <ion-input type="num" formControlName="quantity"> </ion-input>
+                                </ion-item>
+                            </ion-col>
+                        </ion-row>
+                    </ion-grid>
+
+                    <ion-grid class="ion-no-padding">
+                        <ion-row>
+                            <ion-col size="6" class="multi-item no-padding-left">
+                                <ion-row>
+                                    <ion-col size="7" class="no-padding-left">
+                                        <ion-item>
+                                            <ion-label position="floating" color="medium">{{_translate.instant('general.weight')}}</ion-label>
+                                            <ion-input type="num" formControlName="weight">
+                                            </ion-input>
+                                        </ion-item>
+                                    </ion-col>
+                                    <ion-col size="5">
+                                        <ion-item class="fix-height">
+                                            <ion-label position="stacked" color="medium"></ion-label>
+                                            <ion-select [placeholder]="_translate.instant('general.unit')" interface="action-sheet" formControlName="weight_unit">
+                                                <ion-select-option value="kg" selected>{{_translate.instant('general.kg')}}</ion-select-option>
+                                                <ion-select-option value="g">{{_translate.instant('general.g')}}</ion-select-option>
+                                            </ion-select>
+                                        </ion-item>
+                                    </ion-col>
+                                </ion-row>
+                            </ion-col>
+                            <ion-col size="6" class="multi-item no-padding-right">
+                                <ion-row>
+                                    <ion-col size="7" class="no-padding-right">
+                                        <ion-item>
+                                            <ion-label position="floating" color="medium">{{_translate.instant('general.height')}}</ion-label>
+                                            <ion-input type="num" formControlName="height">
+                                            </ion-input>
+                                        </ion-item>
+                                    </ion-col>
+                                    <ion-col size="5">
+                                        <ion-item class="fix-height">
+                                            <ion-label position="stacked" color="medium"></ion-label>
+                                            <ion-select placeholder="Select Category" interface="action-sheet" formControlName="height_unit">
+                                                <ion-select-option value="cm" selected>{{_translate.instant('general.cm')}}</ion-select-option>
+                                                <ion-select-option value="m">{{_translate.instant('general.m')}}</ion-select-option>
+                                            </ion-select>
+                                        </ion-item>
+                                    </ion-col>
+                                </ion-row>
+                            </ion-col>
+                        </ion-row>
+                        <ion-row>
+                            <ion-col size="6" class="multi-item no-padding-left">
+                                <ion-row>
+                                    <ion-col size="7" class="no-padding-left">
+                                        <ion-item>
+                                            <ion-label position="floating" color="medium">{{_translate.instant('general.width')}}</ion-label>
+                                            <ion-input type="num" formControlName="width">
+                                            </ion-input>
+                                        </ion-item>
+                                    </ion-col>
+                                    <ion-col size="5">
+                                        <ion-item class="fix-height">
+                                            <ion-label position="stacked" color="medium"></ion-label>
+                                            <ion-select placeholder="Select Category" interface="action-sheet" formControlName="width_unit">
+                                                <ion-select-option value="cm" selected>{{_translate.instant('general.cm')}}</ion-select-option>
+                                                <ion-select-option value="m">{{_translate.instant('general.m')}}</ion-select-option>
+                                            </ion-select>
+                                        </ion-item>
+                                    </ion-col>
+                                </ion-row>
+                            </ion-col>
+                            <ion-col size="6" class="multi-item no-padding-right">
+                                <ion-row>
+                                    <ion-col size="7" class="no-padding-right">
+                                        <ion-item>
+                                            <ion-label position="floating" color="medium">{{_translate.instant('general.length')}}</ion-label>
+                                            <ion-input type="num" formControlName="length">
+                                            </ion-input>
+                                        </ion-item>
+                                    </ion-col>
+                                    <ion-col size="5">
+                                        <ion-item class="fix-height">
+                                            <ion-label position="stacked" color="medium"></ion-label>
+                                            <ion-select placeholder="Select Category" interface="action-sheet" formControlName="length_unit">
+                                                <ion-select-option value="cm" selected>{{_translate.instant('general.cm')}}</ion-select-option>
+                                                <ion-select-option value="m">{{_translate.instant('general.m')}}</ion-select-option>
+                                            </ion-select>
+                                        </ion-item>
+                                    </ion-col>
+                                </ion-row>
+                            </ion-col>
+                        </ion-row>
+                    </ion-grid>
+                    <ion-item>
+                        <ion-label position="floating" color="medium">{{_translate.instant('general.description')}}</ion-label>
+                        <ion-textarea [placeholder]="_translate.instant('general.describe_your_order')" rows="3" formControlName="description">
+                        </ion-textarea>
+                    </ion-item>
+                    <ion-button class="btn-full" round strong size="small" color="primary" (click)="appendPackage()" [disabled]="!packageForm.valid" *ngIf="packageForm.valid">
+                        <ion-icon name="add-circle-outline" slot="start"></ion-icon>
+                        {{_translate.instant('general.add_more_packages')}}
+                    </ion-button>
+                </form>
+            </div>
+        </ion-slide>
+        <ion-slide class="has-grids">
+            <div class="data-grid">
+                <h4>{{_translate.instant('general.shipment_info')}}</h4>
+                <ion-row>
+                    <ion-col size="6">
+                        <ion-label color="medium">{{_translate.instant('general.shipment_type')}}</ion-label>
+                        <p [innerHTML]="shipmentFirst.get('shipment_type').value == 1 ? _translate.instant('general.send') : _translate.instant('general.receive')">
+                            {{_translate.instant('general.send')}}
+                        </p>
+                    </ion-col>
+                    <ion-col size="6" *ngIf="shipmentFirst.get('sender_address').value != null">
+                        <ion-label color="medium">{{_translate.instant('general.sender_address')}}</ion-label>
+                        <p>{{returnText('sender_address')}}</p>
+                    </ion-col>
+                    <ion-col size="6" *ngIf="shipmentFirst.get('receiver_id').value != null">
+                        <ion-label color="medium">{{_translate.instant('general.receiver')}}</ion-label>
+                        <p>{{returnText('receiver_id')}}</p>
+                    </ion-col>
+                    <ion-col size="6" *ngIf="shipmentFirst.get('receiver_address').value != null">
+                        <ion-label color="medium">{{_translate.instant('general.receiver_address')}}</ion-label>
+                        <p>{{returnText('receiver_address')}}</p>
+                    </ion-col>
+                    <ion-col size="6" *ngIf="shipmentFirst.get('return_defray').value">
+                        <ion-label color="medium">{{_translate.instant('general.return_defray')}}</ion-label>
+                        <p [innerHTML]="shipmentFirst.get('return_defray').value ? 'Yes' : 'No'"></p>
+                    </ion-col>
+                    <ion-col size="6" *ngIf="shipmentFirst.get('return_defray').value">
+                        <ion-label color="medium">{{_translate.instant('general.return_package_fee')}}</ion-label>
+                        <p>{{shipmentFirst.get('return_package_fee').value}}</p>
+                    </ion-col>
+                    <ion-col size="6" *ngIf="shipmentFirst.get('return_defray').value">
+                        <ion-label color="medium">{{_translate.instant('general.package_fee')}}</ion-label>
+                        <p>{{shipmentFirst.get('package_fee').value}}</p>
+                    </ion-col>
+                    <ion-col size="6">
+                        <ion-label color="medium">{{_translate.instant('general.payment_type')}}</ion-label>
+                        <p [innerHTML]="shipmentFirst.get('payment_type').value == 1 ? 'Postpaid' : 'Prepaid'"></p>
+                    </ion-col>
+                    <ion-col size="6" *ngIf="shipmentFirst.get('packaging_id').value != null">
+                        <ion-label color="medium">{{_translate.instant('general.packaging')}}</ion-label>
+                        <p>{{returnText('packaging_id')}}</p>
+                    </ion-col>
+                    <ion-col size="6" *ngIf="shipmentFirst.get('office_id').value != null">
+                        <ion-label color="medium">{{_translate.instant('general.office')}}</ion-label>
+                        <p>{{returnText('office_id')}}</p>
+                    </ion-col>
+                    <ion-col size="6" *ngIf="shipmentFirst.get('ship_date').value">
+                        <ion-label color="medium">{{_translate.instant('general.ship_date')}}</ion-label>
+                        <p>{{shipmentFirst.get('ship_date').value}}</p>
+                    </ion-col>
+                </ion-row>
+            </div>
+            <div class="data-grid">
+                <h4>{{_translate.instant('general.shipment_details')}}</h4>
+                <h6>
+                    <ion-text color="primary">
+                        {{_translate.instant('general.packages')}} ({{packages.length}})
+                    </ion-text>
+                </h6>
+                <ion-grid class="data-grid package-review" *ngFor="let package of packages">
+                    <ion-row>
+                        <ion-col><span class="title">{{_translate.instant('general.package_type')}}</span
+              ><br />
+              {{getCatName(package.category_id)}}
+            </ion-col>
+            <ion-col
+              ><span class="title"
+                >{{_translate.instant('general.quantity')}}</span
+              ><br />
+              {{package.quantity}}
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col
+              ><span class="title"
+                >{{_translate.instant('general.weight')}}</span
+              ><br />
+              {{package.weight}} {{package.weight_unit}}</ion-col
+            >
+            <ion-col
+              ><span class="title"
+                >{{_translate.instant('general.height')}}</span
+              ><br />
+              {{package.height}} {{package.height_unit}}</ion-col
+            >
+            <ion-col
+              ><span class="title">{{_translate.instant('general.width')}}</span
+              ><br />
+              {{package.width}} {{package.width_unit}}</ion-col
+            >
+            <ion-col
+              ><span class="title"
+                >{{_translate.instant('general.length')}}</span
+              ><br />
+              {{package.length}} {{package.length_unit}}</ion-col
+            >
+          </ion-row>
+          <ion-row>
+            <ion-col
+              ><span class="title"
+                >{{_translate.instant('general.description')}}</span
+              >
+              {{package.description}}
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </div>
+    </ion-slide>
+    <ion-slide>
+      <div class="order-success">
+        <ion-icon src="assets/img/success_logo.svg"></ion-icon>
+        <p>{{_translate.instant('general.shipment_created_successfully')}}</p>
+        <p>{{_translate.instant('general.your_shipment_num')}}</p>
+        <p class="shipment-number">{{orderDone?.number}}</p>
+        <ion-button
+          class="btn-full btn-gradient"
+          expand="block"
+          round
+          strong
+          routerLink="/tabs/home"
+          routerDirection="root"
+        >
+          {{_translate.instant('general.back_to_home')}}
+        </ion-button>
+      </div>
+    </ion-slide>
+  </ion-slides>
+</ion-content>
+<ion-footer class="has-action" [ngStyle]="{'opacity': Opacity}">
+  <ion-button
+    class="btn-full btn-gradient"
+    expand="block"
+    round
+    strong
+    (click)="nextStep()"
+    *ngIf="step == 1"
+    [disabled]="!shipmentFirst.valid"
+  >
+    {{_translate.instant('general.next')}}
+  </ion-button>
+  <ion-button
+    class="btn-full btn-gradient"
+    expand="block"
+    round
+    strong
+    (click)="nextStep()"
+    *ngIf="step == 2"
+    [disabled]="packages.length > 0 ? false  : !packageForm.valid"
+  >
+    {{_translate.instant('general.next')}}
+  </ion-button>
+  <ion-button
+    class="btn-full btn-gradient"
+    expand="block"
+    round
+    strong
+    (click)="nextStep()"
+    *ngIf="step == 3"
+  >
+    {{_translate.instant('general.submit_order')}}
+  </ion-button>
+</ion-footer>

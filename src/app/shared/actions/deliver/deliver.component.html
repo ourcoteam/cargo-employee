@@ -1,0 +1,57 @@
+<ion-header>
+    <ion-toolbar mode="ios">
+        <ion-button (click)="closeModal()" fill="clear" slot="start" color="dark">
+            <ion-icon name="close" slot="icon-only"></ion-icon>
+        </ion-button>
+        <ion-title> {{ _translate.instant('actions.' + action) }} </ion-title>
+    </ion-toolbar>
+    <h4 class="shipment-number ion-text-center dark">
+        {{ shipData?.number }}
+    </h4>
+</ion-header>
+<ion-content class="ion-padding" [scrollY]="!drawing">
+    <div class="form-holder">
+        <ion-item class="has-action">
+            <ion-label position="stacked" color="medium">{{ _translate.instant('actions.person_who_received') }}
+            </ion-label>
+            <ion-input type="text" [(ngModel)]="recName" [placeholder]="_translate.instant('actions.type_person_name')">
+            </ion-input>
+        </ion-item>
+        <ion-item class="has-action">
+            <ion-note slot="end" color="primary" class="action-btn" (click)="openCam()">{{ _translate.instant('actions.scan_with_camera') }}</ion-note>
+            <ion-label position="stacked" color="medium">{{ _translate.instant('actions.id_card_copy') }}
+            </ion-label>
+            <div class="id-photo">
+                <img *ngIf="idCardPhoto" [src]="idCardPhoto" alt="" />
+            </div>
+        </ion-item>
+
+        <ion-item class="has-action">
+            <ion-note slot="end" color="primary" class="action-btn" (click)="openCam2()">{{ _translate.instant('actions.scan_with_camera') }}</ion-note>
+            <ion-label position="stacked" color="medium">{{ _translate.instant('actions.package_before') }}
+            </ion-label>
+            <div class="id-photo">
+                <img *ngIf="packagePhoto" [src]="packagePhoto" alt="" />
+            </div>
+        </ion-item>
+
+        <ion-item class="has-action">
+            <ion-note slot="end" color="primary" class="action-btn" *ngIf="!signature && !sigSaved && sigDrawed" (click)="saveSignature()">{{ _translate.instant('actions.save') }}</ion-note>
+            <ion-note slot="end" color="primary" class="action-btn" *ngIf="signature && sigSaved" (click)="clearSignature()">{{ _translate.instant('actions.clear_sig') }}</ion-note>
+            <ion-label position="stacked" color="medium">{{ _translate.instant('actions.customer_signature') }}
+            </ion-label>
+            <div #signatureDiv class="signature" *ngIf="!signature && !sigSaved">
+                <canvas *ngIf="!sigSaved" #imageCanvas (mousedown)="startDrawing($event)" (touchstart)="startDrawing($event)" (touchmove)="moved($event)" (mousemove)="moved($event)" (mouseup)="endDrawing()" (touchend)="endDrawing()"></canvas>
+            </div>
+            <div class="sig-controls" *ngIf="signature && sigSaved">
+                <ion-img *ngIf="signature && sigSaved" [src]="sigPhoto" alt=""></ion-img>
+            </div>
+        </ion-item>
+    </div>
+</ion-content>
+
+<ion-footer class="has-action">
+    <ion-button class="btn-full btn-gradient" expand="block" *ngIf="action == 'delivered'" round strong (click)="receiveCheck()" [disabled]="!signature || !recName">
+        {{ _translate.instant('actions.save') }}
+    </ion-button>
+</ion-footer>

@@ -1,0 +1,47 @@
+.data-grid {
+    text-align: start;
+    font-size: 14px;
+    font-weight: 400;
+    margin-bottom: 10px;
+    h4 {
+        color: var(--ion-color-primary);
+    }
+    ion-label {
+        text-transform: uppercase;
+    }
+    p {
+        span.dimmed {
+            color: var(--ion-color-medium);
+        }
+        ion-button.call-btn {
+            padding: 0;
+            margin: 0 5px;
+            --padding-start: 5px;
+            --padding-end: 5px;
+        }
+        &.has_action {
+            display: flex;
+            vertical-align: middle;
+        }
+    }
+}
+
+ion-fab.shipment-action {
+    margin-bottom: 30px;
+    margin-inline-end: 8px;
+    ion-fab-button[title] {
+        position: relative;
+        &::after {
+            position: absolute;
+            content: attr(title);
+            z-index: 1;
+            right: 55px;
+            bottom: 0px;
+            padding: 9px;
+            border-radius: 15px;
+            box-shadow: 0 3px 5px -1px rgba(0, 0, 0, 0.2);
+            background: var(--ion-color-medium);
+            color: var(--ion-color-medium-contrast);
+        }
+    }
+}

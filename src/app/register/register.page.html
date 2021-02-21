@@ -1,0 +1,139 @@
+<ion-header class="has-elements">
+    <ion-toolbar>
+        <ion-img src="/assets/img/logo.svg" slot="start" class="header-icon"></ion-img>
+        <ion-title>{{_translate.instant('register.create_account')}}</ion-title>
+        <ion-button color="primary" size="small" fill="clear" slot="end" routerLink="/login" routerDirection="back">
+            {{_translate.instant('register.log_in')}}
+        </ion-button>
+    </ion-toolbar>
+    <ion-progress-bar color="primary" [value]="progress"></ion-progress-bar>
+</ion-header>
+
+<ion-content class="ion-padding">
+    <ion-slides pager="false" #stepSlider class="step-slider" [options]="slideOpts">
+        <ion-slide>
+            <div class="form-holder register-form">
+                <form [formGroup]="userInfoForm">
+                    <ion-item>
+                        <ion-label position="floating" color="medium">
+                            {{_translate.instant('general.name')}}
+                            <ion-text> * </ion-text>
+                        </ion-label>
+                        <ion-input formControlName="name" type="text"> </ion-input>
+                    </ion-item>
+                    <ion-item>
+                        <ion-label position="floating" color="medium">
+                            {{_translate.instant('general.mobile')}}
+                            <ion-text> * </ion-text>
+                        </ion-label>
+                        <ion-input formControlName="mobile" type="tel"> </ion-input>
+                    </ion-item>
+                    <ion-item>
+                        <ion-label position="floating" color="medium">
+                            {{_translate.instant('general.email')}}
+                            <ion-text> * </ion-text>
+                        </ion-label>
+                        <ion-input #inputEmail formControlName="email" type="email">
+                        </ion-input>
+                    </ion-item>
+                    <ion-item>
+                        <ion-label position="floating" color="medium">
+                            {{_translate.instant('general.username')}}
+                            <ion-text> * </ion-text>
+                        </ion-label>
+                        <ion-input formControlName="username" type="text"> </ion-input>
+                    </ion-item>
+                    <ion-item>
+                        <ion-label position="floating" color="medium">
+                            {{_translate.instant('general.password')}}
+                            <ion-text> * </ion-text>
+                        </ion-label>
+                        <ion-input formControlName="password" type="password"> </ion-input>
+                    </ion-item>
+                </form>
+            </div>
+        </ion-slide>
+        <ion-slide>
+            <div class="form-holder register-form">
+                <form [formGroup]="addressInfoForm">
+                    <ion-item>
+                        <ion-label position="floating" color="medium">
+                            {{_translate.instant('general.address_name')}}
+                            <ion-text> * </ion-text>
+                        </ion-label>
+                        <ion-input formControlName="address_name" type="text"> </ion-input>
+                    </ion-item>
+                    <ion-item>
+                        <ion-label position="floating" color="medium">
+                            {{_translate.instant('general.country')}}
+                            <ion-text> * </ion-text>
+                        </ion-label>
+                        <ion-select formControlName="country_id" placeholder="Select Country" interface="action-sheet" (ionChange)="getRegions()" [disabled]="!countries">
+                            <ion-select-option *ngFor="let country of countries" [value]="country.id">{{country.name}}</ion-select-option>
+                        </ion-select>
+                    </ion-item>
+                    <ion-item>
+                        <ion-label position="floating" color="medium">
+                            {{_translate.instant('general.state_region')}}
+                            <ion-text> * </ion-text>
+                        </ion-label>
+                        <ion-select formControlName="state_id" placeholder="Select State/Region" interface="action-sheet" (ionChange)="getCities()" [disabled]="!regions">
+                            <ion-select-option *ngFor="let region of regions" [value]="region.id">{{region.name}}</ion-select-option>
+                        </ion-select>
+                    </ion-item>
+                    <ion-item>
+                        <ion-label position="floating" color="medium">
+                            {{_translate.instant('general.city')}}
+                            <ion-text> * </ion-text>
+                        </ion-label>
+                        <ion-select formControlName="city_id" placeholder="Select City" interface="action-sheet" (ionChange)="getAreas()" [disabled]="!cities">
+                            <ion-select-option *ngFor="let city of cities" [value]="city.id">{{city.name}}</ion-select-option>
+                        </ion-select>
+                    </ion-item>
+                    <ion-item>
+                        <ion-label position="floating" color="medium">
+                            {{_translate.instant('general.area')}}
+                        </ion-label>
+                        <ion-select formControlName="area_id" placeholder="Select Area" interface="action-sheet" [disabled]="!areas">
+                            <ion-select-option *ngFor="let area of areas" [value]="area.id">{{area.name}}</ion-select-option>
+                        </ion-select>
+                    </ion-item>
+                    <ion-item>
+                        <ion-label position="floating" color="medium">
+                            {{_translate.instant('general.postal_code')}}
+                        </ion-label>
+                        <ion-input formControlName="postal_code" type="num"> </ion-input>
+                    </ion-item>
+                </form>
+            </div>
+        </ion-slide>
+        <ion-slide class="has-map">
+            <ion-button color="dark" (click)="getCurrentLocation()" class="map-btn">
+                <ion-icon name="locate" slot="start"></ion-icon>
+                {{_translate.instant('general.my_current_location')}}
+            </ion-button>
+            <div id="map_canvas">
+                <!-- <ion-button ion-button (click)="onButtonClick()">Demo</ion-button> -->
+                <ion-img src="/assets/img/marker.svg" class="map-marker" id="DummyMarker" *ngIf="step == 3"></ion-img>
+            </div>
+        </ion-slide>
+        <ion-slide class="success">
+            <div class="success-content">
+                <ion-img src="/assets/img/success_logo.svg"></ion-img>
+                <p>
+                    {{_translate.instant('register.you_have_successfully_created_your')}}
+                    <b> {{_translate.instant('register.account')}}</b>
+                </p>
+                <!-- <p>You will be redirected</p> -->
+                <!-- <ion-button class="btn-full btn-gradient" expand="block" round strong>
+          Login Now
+        </ion-button> -->
+            </div>
+        </ion-slide>
+    </ion-slides>
+</ion-content>
+<ion-footer class="has-action">
+    <ion-button class="btn-full btn-gradient" expand="block" round strong (click)="nextStep()">
+        {{_translate.instant('general.next')}}
+    </ion-button>
+</ion-footer>

@@ -1,0 +1,153 @@
+<ion-header [ngStyle]="{ opacity: Opacity }">
+    <ion-toolbar mode="ios">
+        <ion-button (click)="closeModal()" fill="clear" slot="start" color="dark">
+            <ion-icon name="close" slot="icon-only"></ion-icon>
+        </ion-button>
+        <ion-title> {{ _translate.instant('actions.' + action) }} </ion-title>
+    </ion-toolbar>
+    <h4 class="shipment-number ion-text-center dark">
+        {{ shipData?.number }}
+    </h4>
+</ion-header>
+<ion-content class="ion-padding" [ngStyle]="{ opacity: Opacity }">
+    <div *ngIf="action == 'update_status'" class="form-holder">
+        <ion-item>
+            <ion-label position="floating" color="medium">
+                {{ _translate.instant('actions.delivery_status') }}
+                <ion-text> * </ion-text>
+            </ion-label>
+            <ion-select [placeholder]="_translate.instant('actions.select_delivery_status')" interface="action-sheet">
+                <ion-select-option value="approved">Approved</ion-select-option>
+                <ion-select-option value="returned">Returned</ion-select-option>
+                <ion-select-option value="rejected">Rejected</ion-select-option>
+            </ion-select>
+        </ion-item>
+        <ion-item>
+            <ion-label position="floating" color="medium">
+                {{ _translate.instant('actions.message') }}
+                <ion-text> * </ion-text>
+            </ion-label>
+            <ion-textarea [placeholder]="_translate.instant('actions.type_info_here')">
+            </ion-textarea>
+        </ion-item>
+    </div>
+    <div *ngIf="action == 'postpone'" class="form-holder">
+        <form [formGroup]="postponeForm">
+            <ion-item>
+                <ion-label color="medium" position="floating">{{ _translate.instant('actions.to_date') }} *
+                </ion-label>
+                <!-- <ion-input [liIonic4Datepicker]="datePickerObj"> </ion-input> -->
+                <!-- <ion-datetime displayFormat="DD/MMMM/YYYY" min="2020-01-10"></ion-datetime> -->
+                <ion-input type="text" formControlName="ship_date" [liIonic4Datepicker]="datePickerObj">
+                </ion-input>
+            </ion-item>
+            <ion-item>
+                <ion-label position="floating" color="medium">
+                    {{ _translate.instant('actions.reason') }}
+                    <ion-text> * </ion-text>
+                </ion-label>
+                <ion-textarea formControlName="note" [placeholder]="_translate.instant('actions.type_reason')">
+                </ion-textarea>
+            </ion-item>
+        </form>
+    </div>
+    <div *ngIf="action == 'receive'" class="form-holder">
+        <form [formGroup]="receiveForm">
+            <div>
+                <ion-item class="has-action" *ngIf="!shipData?.receiver">
+                    <ion-note slot="end" color="primary" class="action-btn" (click)="newReceiverModal()">{{ _translate.instant('general.add_new_receiver') }}</ion-note>
+                    <ion-label position="stacked" color="medium">{{ _translate.instant('general.receiver') }}
+                    </ion-label>
+                    <ionic-selectable #rcv formControlName="receiver_data" itemValueField="id" itemTextField="name" [items]="receivers" [canSearch]="true" [canClear]="true" (onSearch)="searchUsers($event)" [placeholder]="
+              this.currentReceiver
+                ? this.currentReceiver.name
+                : _translate.instant('general.select_receiver')
+            " [searchDebounce]="500" [searchFailText]="_translate.instant('general.no_users_found')" [searchPlaceholder]="
+              _translate.instant('general.username_or_mobile')
+            " [shouldFocusSearchbar]="true" headerColor="primary" (onSelect)="rcvDoneSelect($event)" (onClear)="clearRcvAddr($event)">
+                    </ionic-selectable>
+                </ion-item>
+                <ion-item class="has-action" *ngIf="shipData?.receiver">
+                    <ion-label position="floating" color="medium">{{ _translate.instant('general.receiver') }}
+                    </ion-label>
+                    <ion-input type="text" [value]="shipData?.receiver.name" disabled="true">
+                    </ion-input>
+                </ion-item>
+                <ion-item class="has-action" *ngIf="!shipData?.receiver">
+                    <ion-note slot="end" color="primary" class="action-btn" (click)="newReceiverAddressModal()" *ngIf="receiveForm.get('receiver_id').value">{{ _translate.instant('general.add_receiver_address') }}</ion-note>
+                    <ion-label position="stacked" color="medium">{{ _translate.instant('general.receiver_address') }}
+                    </ion-label>
+                    <ion-select [placeholder]="
+              _translate.instant('general.select_receiver_address')
+            " interface="action-sheet" formControlName="receiver_address_id" [required]="receiveForm.get('receiver_id').value" [disabled]="!receiveForm.get('receiver_id').value" *ngIf="!shipData?.receiver_address">
+                        <ion-select-option *ngFor="let recAddr of receiverAddresses" [value]="recAddr.id">{{ recAddr?.name }}</ion-select-option>
+                    </ion-select>
+                </ion-item>
+                <ion-item class="has-action" *ngIf="shipData?.receiver_address?.address">
+                    <ion-label position="floating" color="medium">{{ _translate.instant('general.receiver_address') }}
+                    </ion-label>
+                    <ion-input type="text" [value]="
+              shipData?.receiver_address.address
+                ? shipData?.receiver_address.address
+                : ''
+            " disabled="true">
+                    </ion-input>
+                </ion-item>
+            </div>
+            <!-- <div *ngIf="shipData?.receiver"></div> -->
+            <ion-item>
+                <ion-label color="medium" position="floating">{{ _translate.instant('general.courier_fee') }}
+                    <span>*</span>
+                </ion-label>
+                <ion-input type="number" formControlName="courier_fee" [value]="shipData.courier_fee_amount">
+                </ion-input>
+            </ion-item>
+            <ion-item>
+                <ion-label color="medium">{{ _translate.instant('general.return_defray') }}
+                </ion-label>
+                <ion-toggle color="primary" formControlName="return_defray" (ionChange)="defrayChange($event)"></ion-toggle>
+            </ion-item>
+
+            <div class="ion-no-padding" *ngIf="isReturnDefray">
+                <ion-item>
+                    <ion-label color="medium" position="floating">{{ _translate.instant('general.package_fee') }}
+                        <span>*</span>
+                    </ion-label>
+                    <ion-input type="number" formControlName="package_fee" [required]="isReturnDefray">
+                    </ion-input>
+                </ion-item>
+
+                <ion-item>
+                    <ion-label color="medium" position="floating">{{ _translate.instant('general.return_package_fee') }}
+                        <span>*</span>
+                    </ion-label>
+                    <ion-select [placeholder]="_translate.instant('general.return_package_fee')" interface="popover">
+                        <ion-select-option value="1" [selected]="shipData.return_package_fee == 1">{{ _translate.instant('general.receiver') }}
+                        </ion-select-option>
+                        <ion-select-option value="2" [selected]="shipData.return_package_fee == 2">{{ _translate.instant('general.sender') }}</ion-select-option>
+                    </ion-select>
+                </ion-item>
+
+                <ion-item>
+                    <ion-label color="medium" position="floating">{{ _translate.instant('general.return_shipment_cost') }}
+                        <span>*</span>
+                    </ion-label>
+                    <ion-input type="number" formControlName="return_courier_fee" [value]="shipData?.return_courier_fee_amount" [required]="isReturnDefray">
+                    </ion-input>
+                </ion-item>
+            </div>
+        </form>
+    </div>
+</ion-content>
+<ion-footer class="has-action" [ngStyle]="{ opacity: Opacity }">
+    <ion-button class="btn-full btn-gradient" expand="block" *ngIf="action == 'update_status'" round strong (click)="closeModal()">
+        {{ _translate.instant('actions.update') }}
+    </ion-button>
+    <ion-button class="btn-full btn-gradient" expand="block" *ngIf="action == 'postpone'" round strong (click)="doPostpone()" [disabled]="!postponeForm.valid">
+        {{ _translate.instant('actions.save') }}
+    </ion-button>
+
+    <ion-button class="btn-full btn-gradient" expand="block" *ngIf="action == 'receive'" round strong (click)="receiveCheck()" [disabled]="!receiveForm.valid">
+        {{ _translate.instant('actions.confirm') }}
+    </ion-button>
+</ion-footer>

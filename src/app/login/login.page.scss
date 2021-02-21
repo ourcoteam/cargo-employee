@@ -1,0 +1,12 @@
+.page-logo {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 2vh;
+  ion-img.logo {
+    height: 12vh;
+  }
+}
+ion-content {
+  background-color: #fff;
+}

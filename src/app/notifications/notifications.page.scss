@@ -1,0 +1,30 @@
+ion-card.white-card {
+    margin-bottom: 20px;
+    ion-card-header {
+        padding-bottom: 5px;
+        ion-card-subtitle {}
+        ion-card-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--ion-color-dark);
+        }
+    }
+    ion-card-content {
+        p {
+            &.unread {
+                font-weight: 700;
+            }
+        }
+        span {
+            width: 10px;
+            height: 10px;
+            background: var(--ion-color-light);
+            display: inline-block;
+            border-radius: 10px;
+            margin: 0;
+            &.unreaded {
+                background: var(--ion-color-primary);
+            }
+        }
+    }
+}
